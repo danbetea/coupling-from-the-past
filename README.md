@@ -1,4 +1,4 @@
-# coupling_from_the_past
+# Coupling from the past
 Generates uniformly random alternating sign matrices and boxed plane partitions using coupling from the past (the Propp--Wilson algorithm).  
 
 The main files are and do:  
