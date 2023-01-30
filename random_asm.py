@@ -13,13 +13,13 @@ Example usage:
 import subprocess, os, sys, getopt
 
 def rand_asm(n):
-    cmd_exec = ["./sqi", str(n+1),"-asm"]
+    cmd_exec = ["./squareice", str(n+1),"-asm"]
     try:
         result = subprocess.Popen(cmd_exec, stdout=subprocess.PIPE, stderr=open('/dev/null','w'))
     except OSError:
         sys.stderr.write("Running program for the first time. Compiling C code...\n")
         # note: using call, as it ends for the completion of the compilation
-        cmd_compile = ['gcc', 'squareice.c', 'r250.c', '-O', '-o', 'sqi']
+        cmd_compile = ['gcc', 'squareice.c', 'r250.c', '-O', '-o', 'squareice']
         result_compile = subprocess.call(cmd_compile, stderr=open('/dev/null','w'))
         sys.stderr.write("End of compilation.\n")
         result = subprocess.Popen(cmd_exec, stdout=subprocess.PIPE, stderr=open('/dev/null','w'))
