@@ -1,5 +1,5 @@
 """
-A thin wrapper around fast coupling from the past, implemented in C in the file squareice.c (see said file for authors)
+A thin wrapper around fast coupling from the past, implemented in C++ in the file rasm_basic.cpp
 
 -h for help
 
