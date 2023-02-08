@@ -23,6 +23,8 @@ For basic usage:
     >
     > ```./rasm_basic 100 -asm_file```
     >
+    > ```./rasm_basic 1000 -asm_file -initial 4194304``` (optimized for sampling a size 1000 ASM, takes about 8-10 hours)
+    >
     >```python3 rasm_basic.py 15```
 
 ## Note
