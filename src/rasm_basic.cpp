@@ -163,49 +163,49 @@ int main(int argc, char **argv) {
     if (argc > 2)
         for (count = 2; count < argc; count ++) {
             if (!strcmp(argv[count],"-asm"))
-	            output = ASM;
+                output = ASM;
             else if (!strcmp(argv[count],"-asm_file"))
                 output = ASM_F;
             else if (!strcmp(argv[count],"-csum"))
                 output = CSUM;
             else if (!strcmp(argv[count],"-report"))
-	            report = true;
+                report = true;
             else if (!strcmp(argv[count],"-min_only"))
-	            min_only = true;
+                min_only = true;
             else if (!strcmp(argv[count],"-max_only"))
-	            max_only = true;
+                max_only = true;
             else if (!strcmp(argv[count],"-seed")) {
-	            if (count == argc - 1) {
-	                std::cout << "You must specify a seed.\n";
-	                exit(1);
-	            }
+                if (count == argc - 1) {
+                    std::cout << "You must specify a seed.\n";
+                    exit(1);
+                }
                 // sscanf(argv[count+1],"%d",&random_seed); also works
                 random_seed = std::stoi(argv[count+1]); 
-	            use_random = false;
-	            count ++;
+                use_random = false;
+                count ++;
             }
             else if (!strcmp(argv[count],"-initial")) {
-	            if (count == argc - 1) {
-	                std::cout << "You must specify an initial number of steps.\n";
-	                exit(1);
-	            }
-	            initial = std::stoi(argv[count+1]);
-	            if (initial < 1 || initial > 100000000) {
-	                std::cout << "Invalid value for initial, must be between 1 and 100000000 \n";
-	                exit(1);
-	            }
-	            count ++;
-	            if (1 << log2_int(initial) != initial) {
-	                initial = (1 << log2_int(initial));
-	                std::cerr << "Warning, initial is not a power of two. Increasing initial to " 
+                if (count == argc - 1) {
+                    std::cout << "You must specify an initial number of steps.\n";
+                    exit(1);
+                }
+                initial = std::stoi(argv[count+1]);
+                if (initial < 1 || initial > 536870912) {
+                    std::cout << "Invalid value for initial; it must be between 1 and 2^29 = 536870912 \n";
+                    exit(1);
+                }
+                count ++;
+                if (1 << log2_int(initial) != initial) {
+                    initial = (1 << log2_int(initial));
+                    std::cerr << "Warning, initial is not a power of two. Increasing initial to " 
                               << initial << std::endl;
-	            }
+                }
             }
             else if (!strcmp(argv[count],"-help"))
-	            print_options();
+                print_options();
             else {
-	            std::cout << "Illegal command line argument " << argv[count] << std::endl;
-	            print_options();
+                std::cout << "Illegal command line argument " << argv[count] << std::endl;
+                print_options();
             }
         }
 
@@ -412,8 +412,8 @@ void print_asm_to_file(int** matrix_ht, const int n_rows, const int n_cols) {
 
 bool is_extreme(int** matrix_ht, const int row, const int col) {
     return (matrix_ht[row-1][col] == matrix_ht[row][col+1] &&
-	        matrix_ht[row][col+1] == matrix_ht[row+1][col] &&
-	        matrix_ht[row+1][col] == matrix_ht[row][col-1]);
+            matrix_ht[row][col+1] == matrix_ht[row+1][col] &&
+            matrix_ht[row+1][col] == matrix_ht[row][col-1]);
 }
 
 void initialize_ht(int** minimum_ht, int** maximum_ht, const int n_rows, 
@@ -470,13 +470,13 @@ void evolve_ht(int** minimum_ht, int** maximum_ht,
     for (phase = 0; phase < 2; phase ++)
         for (row = 1; row < n_rows - 1; row ++)
             for (col = 1; col < n_cols - 1; col ++)
-	            if ((row + col) % 2 == phase) {
+                if ((row + col) % 2 == phase) {
                     coin_flip = random_pm1(rn_gen); // uniform random +1 or -1
                     if (is_extreme(minimum_ht, row, col))
-	                    minimum_ht[row][col] = minimum_ht[row-1][col] + coin_flip;
-	                if (is_extreme(maximum_ht, row, col))
-	                    maximum_ht[row][col] = maximum_ht[row-1][col] + coin_flip;
-	            }
+                        minimum_ht[row][col] = minimum_ht[row-1][col] + coin_flip;
+                    if (is_extreme(maximum_ht, row, col))
+                        maximum_ht[row][col] = maximum_ht[row-1][col] + coin_flip;
+                }
 }
 
 void run_cftp(int** minimum_ht, int** maximum_ht, const int n_rows, 
@@ -503,15 +503,15 @@ void run_cftp(int** minimum_ht, int** maximum_ht, const int n_rows,
         // the main coupling from the past loop, runs for a power_of_two steps
         while (step > 0) {
             if (log2_int(step) != power_of_two) {
-	            power_of_two = log2_int(step);
+                power_of_two = log2_int(step);
                 // declare and initialize random number generator 
                 // with correct seeds so we use same randomness throughout
                 rn_gen = std::mt19937(seeds[power_of_two]);
                 offset = 32; // needed as we generate random bits 
                              // from random 32-bit ints
 
-	            if (report)
-	                std::cerr << "Using max number of steps " << time_steps 
+                if (report)
+                    std::cerr << "Using max number of steps " << time_steps 
                         << " and difference in volume at time " 
                         << step << " is " 
                         << volume_diff(maximum_ht, minimum_ht, n_rows, n_cols) 
