@@ -35,7 +35,7 @@ For basic usage:
 
 ## Note
 
-From a software engineering point of view, the file `rasm_basic.cpp` is rather ugly, containing everything in one go. While I do plan some improvements to it, it will always contain everything inside. The reason is very basic: coupling from the past is a rather tricky algorithm, and so having everything in one file is there for pedagogical reasons. If C++ had a decent notebook interface, I would use a notebook instead (and perhaps I will in the future).
+From a software engineering point of view, the file `rasm_basic.cpp` is rather ugly, containing everything in one file. While I do plan some improvements to it, it will always contain everything inside. The reason is very basic: coupling from the past is a rather tricky algorithm, and so having everything in one file is there for pedagogical reasons. If C++ had a decent notebook interface, I would use a notebook instead (and perhaps I will in the future).
 
 ## References
  
