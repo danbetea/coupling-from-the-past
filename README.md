@@ -8,7 +8,7 @@ The ideas behind this repo are:
 
 ## Introduction
 
-This repo generates (for now) uniformly random alternating sign matrices using the Markov Chain Monte Carlo method of coupling from the past (the Propp--Wilson algorithm).  
+This repo generates (for now) uniformly random [alternating sign matrices](https://en.wikipedia.org/wiki/Alternating_sign_matrix) using the Markov Chain Monte Carlo method of coupling from the past (the Propp--Wilson algorithm).  
 
 The main files so far in the `src` directory are and do as follows:  
   - `rasm_basic.cpp` which generates a uniformly random alternating sign matrix (ASM); it has multiple ways of outputting the resulting ASM;
@@ -43,4 +43,4 @@ From a software engineering point of view, the file `rasm_basic.cpp` is rather u
 - Levin, D., Peres, Y., with a contribution by Wilmer, E., *Markov chains and mixing times*, second edition, American Mathematical Society, [link to pdf](https://pages.uoregon.edu/dlevin/MARKOV/markovmixing.pdf)
 - [Wikipedia page for alternating sign matrices](https://en.wikipedia.org/wiki/Alternating_sign_matrix)
 - [Wikipedia page for coupling from the past](https://en.wikipedia.org/wiki/Coupling_from_the_past)
-- Wilso, D., *Perfectly random sampling with Markov chains*, [author's webpage](http://www.dbwilson.com/exact/)
+- Wilson, D., *Perfectly random sampling with Markov chains*, [author's webpage](http://www.dbwilson.com/exact/)
