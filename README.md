@@ -12,7 +12,9 @@ This repo generates (for now) uniformly random [alternating sign matrices](https
 
 The main files so far in the `src` directory are and do as follows:  
   - `rasm_basic.cpp` which generates a uniformly random alternating sign matrix (ASM); it has multiple ways of outputting the resulting ASM;
-  - `rasm_basic.py` is a thin wrapper of the above written in Python, for people who don't want to compile C++ code themselves or want to interface with an 'easier' language.   
+  - `rasm_basic.py` is a thin wrapper of the above written in Python, for people who don't want to compile C++ code themselves or want to interface with an 'easier' language;
+  - `rasm_lib.cpp` is a library meant to be bound with Cython (e.g. there is no main function);
+  - `rasm_sage.pyx` is a Cython binding doing the random sampling; it can be used from sage.
   
 For more on coupling from the past and alternating sign matrices, see the references below. 
   
