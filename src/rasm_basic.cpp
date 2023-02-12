@@ -141,7 +141,7 @@ int main(int argc, char **argv) {
 
     // TODO: make a check for a maximum order
     if (order < 1 ) {
-        std::cout << "Invalid order " << order << std::endl;
+        std::cerr << "Invalid order " << order << std::endl;
         exit(1);
     }
 
@@ -155,13 +155,13 @@ int main(int argc, char **argv) {
     // allocate memory
     int** minimum_ht = new int*[n_rows];
     int** maximum_ht = new int*[n_rows];
-    for(int i = 0; i < n_rows; ++i) {
+    for(int i = 0; i < n_rows; i++) {
         minimum_ht[i] = new int[n_cols];
         maximum_ht[i] = new int[n_cols];
     }
 
     if (argc > 2)
-        for (count = 2; count < argc; count ++) {
+        for (count = 2; count < argc; count++) {
             if (!strcmp(argv[count],"-asm"))
                 output = ASM;
             else if (!strcmp(argv[count],"-asm_file"))
@@ -176,25 +176,25 @@ int main(int argc, char **argv) {
                 max_only = true;
             else if (!strcmp(argv[count],"-seed")) {
                 if (count == argc - 1) {
-                    std::cout << "You must specify a seed.\n";
+                    std::cerr << "You must specify a seed.\n";
                     exit(1);
                 }
                 // sscanf(argv[count+1],"%d",&random_seed); also works
                 random_seed = std::stoi(argv[count+1]); 
                 use_random = false;
-                count ++;
+                count++;
             }
             else if (!strcmp(argv[count],"-initial")) {
                 if (count == argc - 1) {
-                    std::cout << "You must specify an initial number of steps.\n";
+                    std::cerr << "You must specify an initial number of steps.\n";
                     exit(1);
                 }
                 initial = std::stoi(argv[count+1]);
                 if (initial < 1 || initial > 536870912) {
-                    std::cout << "Invalid value for initial; it must be between 1 and 2^29 = 536870912 \n";
+                    std::cerr << "Invalid value for initial; it must be between 1 and 2^29 = 536870912 \n";
                     exit(1);
                 }
-                count ++;
+                count++;
                 if (1 << log2_int(initial) != initial) {
                     initial = (1 << log2_int(initial));
                     std::cerr << "Warning, initial is not a power of two. Increasing initial to " 
@@ -204,7 +204,7 @@ int main(int argc, char **argv) {
             else if (!strcmp(argv[count],"-help"))
                 print_options();
             else {
-                std::cout << "Illegal command line argument " << argv[count] << std::endl;
+                std::cerr << "Illegal command line argument " << argv[count] << std::endl;
                 print_options();
             }
         }
@@ -239,15 +239,15 @@ int main(int argc, char **argv) {
 
     // create a random seed to be used just below
     if (use_random) {
-        std::cout << "\nGenerating random seed to start everything..." 
-                  << std::endl;
+        // std::cerr << "\nGenerating random seed to start everything..." 
+        //           << std::endl;
         std::random_device rd; // use to seed the rng 
         std::mt19937 rng0(rd()); // rng
         std::uniform_int_distribution<> dist0(-INT_MAX-1, INT_MAX);
         random_seed = dist0(rng0);
     }
 
-    std::cout << "Using random seed " << random_seed << ".\n";
+    std::cerr << "Using random seed " << random_seed << ".\n";
 
     // initialize the random number generator used throughout
     // note: as soon as the main loop starts running, it will be reinitialized
@@ -258,7 +258,7 @@ int main(int argc, char **argv) {
 
     // get 256 seeds, to be used by the random number generator in the
     // coupling from the past main loop
-    for (count = 0; count < 256; count ++) {
+    for (count = 0; count < 256; count++) {
         std::uniform_int_distribution<> dist(-INT_MAX-1, INT_MAX);
         seeds[count] = dist(rn_gen);
     }
@@ -294,10 +294,10 @@ int main(int argc, char **argv) {
     else
         print_ht(maximum_ht, n_rows, n_cols);
 
-    std::cout<<std::endl;
+    // std::cerr<<std::endl;
 
     // deallocate memory
-    for(int i = 0; i < n_rows; ++i) {
+    for(int i = 0; i < n_rows; i++) {
         delete [] minimum_ht[i];
         delete [] maximum_ht[i];
     }
@@ -346,8 +346,8 @@ int log2_int(int x) {
 
 void print_ht(int** matrix_ht, const int n_rows, const int n_cols) {
     int row, col;
-    for (row = 0; row < n_rows; row ++) {
-        for (col = 0; col < n_cols; col ++)
+    for (row = 0; row < n_rows; row++) {
+        for (col = 0; col < n_cols; col++)
             std::printf("%2d ",matrix_ht[row][col]);
         std::printf("\n");
     }
@@ -355,8 +355,8 @@ void print_ht(int** matrix_ht, const int n_rows, const int n_cols) {
 
 void print_csum(int** matrix_ht, const int n_rows, const int n_cols) {
     int row, col;
-    for (row = 0; row < n_rows; row ++) {
-        for (col = 0; col < n_cols; col ++)
+    for (row = 0; row < n_rows; row++) {
+        for (col = 0; col < n_cols; col++)
             std::printf("%2d ",(row + col + 2 - matrix_ht[row][col])/2);
         std::printf("\n");
     }
@@ -382,7 +382,7 @@ void print_asm_to_file(int** matrix_ht, const int n_rows, const int n_cols) {
     fptr2 = fopen("asm.txt", "w+");
 
     if(fptr1 == NULL || fptr2 == NULL) {
-        std::cout << "File error!";
+        std::cerr << "File error!";
         std::exit(1);
     }
 
@@ -467,9 +467,9 @@ void evolve_ht(int** minimum_ht, int** maximum_ht,
     // look for local extremes 
     // start at 1 and end at order - 1 to stay off boundaries
     // update where possible     
-    for (phase = 0; phase < 2; phase ++)
-        for (row = 1; row < n_rows - 1; row ++)
-            for (col = 1; col < n_cols - 1; col ++)
+    for (phase = 0; phase < 2; phase++)
+        for (row = 1; row < n_rows - 1; row++)
+            for (col = 1; col < n_cols - 1; col++)
                 if ((row + col) % 2 == phase) {
                     coin_flip = random_pm1(rn_gen); // uniform random +1 or -1
                     if (is_extreme(minimum_ht, row, col))
@@ -486,7 +486,7 @@ void run_cftp(int** minimum_ht, int** maximum_ht, const int n_rows,
     int step;
     std::time_t start, end; // for elapsed time
 
-    start = std::time(nullptr); // start the clock
+    start = std::clock(); // start the clock
 
     // we now run the coupling from the past main loop
     // starting from time = -initial all the way to time 0
@@ -528,9 +528,10 @@ void run_cftp(int** minimum_ht, int** maximum_ht, const int n_rows,
 
         time_steps *= 2;
     }
-    std::cout << "Random ASM of order " << n_rows-1 << " x " << n_cols-1
+    std::cerr << "Random ASM of order " << n_rows-1 << " x " << n_cols-1
                 << " generated after " 
                 << time_steps / 2 << " steps." << std::endl;
-    end = std::time(nullptr);
-    std::cout << "It took " << (end - start) << " seconds." << std::endl;
+    end = std::clock();
+    double total_time = (double) (end - start)/CLOCKS_PER_SEC;
+    std::fprintf(stderr, "It took %.4f seconds.\n", total_time);
 }
