@@ -1,4 +1,4 @@
-# Random alternating sign matrices (and other) via coupling from the past
+# Random alternating sign matrices (and other) via monotone coupling from the past
 
 ## Idea
 
