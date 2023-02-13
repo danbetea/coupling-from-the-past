@@ -91,6 +91,6 @@ def pprint_asm(asm, symbols=""):
         sp1 = f"{symbols[0]} " # symbol for +1 and a space
         sm1 = f"{symbols[1]} " # symbol for -1 and a space
         print('\n'.join([''.join(
-            ["  " if asm[row][col] == 0 else (sp1 if asm[row][col] < 0 else sm1) 
+            ["  " if asm[row][col] == 0 else (sm1 if asm[row][col] < 0 else sp1) 
             for col in range(num_cols)]) 
             for row in range(num_rows)]))
