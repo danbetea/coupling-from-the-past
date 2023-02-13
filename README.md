@@ -35,7 +35,7 @@ For basic usage:
     >
     > ```python3 rasm_basic.py 15```
 
-If you have [sagemath](https://www.sagemath.org) installed, or just [Cython](https://cython.readthedocs.io/en/latest/#), you can try this from within the REPL to generate a 10 x 10 random ASM once you've started the REPL from within the ```src``` directory (example below is for sage):
+If you have [sagemath](https://www.sagemath.org) installed, or just [Cython](https://cython.readthedocs.io/en/latest/#), you can try the following examples from within the REPL to generate a 10 x 10 random ASM once you've started the REPL from within the ```src``` directory (example below is for sage):
 
  - ```sage: %runfile rasm_sage.pyx```
  - ```sage: a = rasm(10, initial=2^7, verbose=True)```
