@@ -1,11 +1,15 @@
 """
-A thin wrapper around fast coupling from the past, implemented in C++ in the file rasm_basic.cpp
+A thin wrapper around fast coupling from the past 
+(implemented in C++ in the file rasm_basic.cpp)
+
 
 -h for help
 
 Example usage:
+
     :: generate a 15 by 15 uniform random alternating sign matrix ::
-    python random_asm.py 15
+
+    $ python random_asm.py 15
 
 (C) Dan Betea 2017--2023
 
@@ -15,6 +19,19 @@ License: MIT License
 import subprocess, os, sys, getopt
 
 def rand_asm(n):
+    """
+    Returns a random alternating sign matrix (ASM)
+    by calling the C++ program "rand_basic" from command line
+    and piping the output. It also compiles the .cpp file   
+    if it finds no executable.
+    
+    Inputs:
+    n: int -- the size of the square ASM
+
+    Returns:
+    matrix: list[list[int]] -- the random ASM
+
+    """
     cmd_exec = ["./rasm_basic", str(n),"-asm"]
     try:
         result = subprocess.Popen(cmd_exec, stdout=subprocess.PIPE, stderr=open('/dev/null','w'))
@@ -38,6 +55,10 @@ def rand_asm(n):
     return matrix
 
 def main(argv=None):
+    """
+    Captures the command line integer, calls the ASM
+    sample function above, prints result to standard output
+    """
     if argv is None:
         argv = sys.argv
     opts, args = getopt.getopt(argv[1:], "h", ["help"])
@@ -45,8 +66,9 @@ def main(argv=None):
         if o in ("-h", "--help"):
             print(__doc__)
             sys.exit(0)
-    # process arguments
+    # process arguments, n is the size of the (n x n) ASM 
     n = int(args[0])
+    # randomly sample and print
     asm = rand_asm(n)
     print('\n'.join([''.join(
         [f"{asm[row][col]:1d}" if col == 0 else f"{asm[row][col]:3d}" 
