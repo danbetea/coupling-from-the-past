@@ -35,6 +35,43 @@ For basic usage:
     >
     > ```python3 rasm_basic.py 15```
 
+If you have [sagemath](https://www.sagemath.org) installed, or just [Cython](https://cython.readthedocs.io/en/latest/#), you can try this from within the REPL to generate a 10 x 10 random ASM once you've started the REPL from within the ```src``` directory (example below is for sage):
+
+ - ```sage: %runfile rasm_sage.pyx```
+ - ```sage: a = rasm(10, initial=2^7, verbose=True)```
+ - ```sage: pprint_asm(a, symbols="")```
+ - ```sage: pprint_asm(a, symbols="+-")```
+ - for example:
+   ```
+   > sage: %runfile rasm_sage.pyx
+   > Compiling ./rasm_sage.pyx...
+   > sage: a = rasm(10, initial=2^7, verbose=True)
+   > Random ASM of order 10 x 10 generated after 128 steps.
+   > Elapsed time: 0.0002 seconds.
+   > sage: pprint_asm(a, symbols="+x")
+   >                  +   
+   >          +           
+   >      +               
+   >        + x +         
+   >    + x   + x +       
+   >  + x           +     
+   >      +   x +     x + 
+   >    +                 
+   >          +   x   +   
+   >              +  
+   > sage: pprint_asm(a)
+   > 0  0  0  0  0  0  0  0  1  0
+   > 0  0  0  0  1  0  0  0  0  0
+   > 0  0  1  0  0  0  0  0  0  0
+   > 0  0  0  1 -1  1  0  0  0  0
+   > 0  1 -1  0  1 -1  1  0  0  0
+   > 1 -1  0  0  0  0  0  1  0  0
+   > 0  0  1  0 -1  1  0  0 -1  1
+   > 0  1  0  0  0  0  0  0  0  0
+   > 0  0  0  0  1  0 -1  0  1  0
+   > 0  0  0  0  0  0  1  0  0  0
+   ```
+
 ## Note
 
 From a software engineering point of view, the file `rasm_basic.cpp` is rather ugly, containing everything in one file. While I do plan some improvements to it, it will always contain everything inside. The reason is very basic: coupling from the past is a rather tricky algorithm, and so having everything in one file is there for pedagogical reasons. If C++ had a decent notebook interface, I would use a notebook instead (and perhaps I will in the future).
