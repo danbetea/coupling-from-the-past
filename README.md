@@ -39,13 +39,13 @@ If you have [sagemath](https://www.sagemath.org) installed, or just [Cython](htt
 
  - ```sage: %runfile rasm_sage.pyx```
  - ```sage: a = rasm(10, initial=2^7, verbose=True)```
- - ```sage: pprint_asm(a, symbols="")```
+ - ```sage: pprint_asm(a)```
  - ```sage: pprint_asm(a, symbols="+-")```
  - for example:
    ```
    > sage: %runfile rasm_sage.pyx
    > Compiling ./rasm_sage.pyx...
-   > sage: a = rasm(10, initial=2^7, verbose=True)
+   > sage: a = rasm(10, initial=int(2 ** 7), verbose=True)
    > Random ASM of order 10 x 10 generated after 128 steps.
    > Elapsed time: 0.0002 seconds.
    > sage: pprint_asm(a, symbols="+x")
