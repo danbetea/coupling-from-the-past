@@ -6,6 +6,7 @@
 #include <cstdio>
 #include <cstring>
 #include <random>
+#include <cmath>
 
 #define HEIGHT 2
 #define ASM    3
@@ -209,6 +210,9 @@ int main(int argc, char **argv) {
             }
         }
 
+    // initialize min and max height functions
+    initialize_ht(minimum_ht, maximum_ht, n_rows, n_cols);
+
     // print min or max ht function if so desired
     if (min_only) {
         if (output == ASM)
@@ -262,9 +266,6 @@ int main(int argc, char **argv) {
         std::uniform_int_distribution<> dist(-INT_MAX-1, INT_MAX);
         seeds[count] = dist(rn_gen);
     }
-
-    // initialize min and max height functions
-    initialize_ht(minimum_ht, maximum_ht, n_rows, n_cols);
 
 
     /*
@@ -346,18 +347,23 @@ int log2_int(int x) {
 
 void print_ht(int** matrix_ht, const int n_rows, const int n_cols) {
     int row, col;
+    int max_entry = (int) (std::max(n_rows, n_cols));
+    int num_digits = ((int) std::floor(std::log10(max_entry)))+1;
     for (row = 0; row < n_rows; row++) {
         for (col = 0; col < n_cols; col++)
-            std::printf("%2d ",matrix_ht[row][col]);
+            std::printf("%*d ", num_digits, matrix_ht[row][col]);
         std::printf("\n");
     }
 }
 
 void print_csum(int** matrix_ht, const int n_rows, const int n_cols) {
     int row, col;
+    // the number of digits of the max entry
+    int max_entry = (n_rows + n_cols - matrix_ht[n_rows-1][n_cols-1])/2;
+    int num_digits = ((int) std::floor(std::log10(max_entry)))+1;
     for (row = 0; row < n_rows; row++) {
         for (col = 0; col < n_cols; col++)
-            std::printf("%2d ",(row + col + 2 - matrix_ht[row][col])/2);
+            std::printf("%*d", num_digits+1, (row + col + 2 - matrix_ht[row][col])/2);
         std::printf("\n");
     }
 }
@@ -533,5 +539,5 @@ void run_cftp(int** minimum_ht, int** maximum_ht, const int n_rows,
                 << time_steps / 2 << " steps." << std::endl;
     end = std::clock();
     double total_time = (double) (end - start)/CLOCKS_PER_SEC;
-    std::fprintf(stderr, "It took %.4f seconds.\n", total_time);
+    std::fprintf(stderr, "Elapsed time: %.4f seconds.\n", total_time);
 }
