@@ -20,6 +20,8 @@ For more on coupling from the past and alternating sign matrices, see the refere
   
 ## Usage
 
+### Basic usage
+
 For basic usage:
 
  - compile with:
@@ -35,10 +37,12 @@ For basic usage:
     >
     > ```python3 rasm_basic.py 15```
 
-If you have [sagemath](https://www.sagemath.org) installed, or just [Cython](https://cython.readthedocs.io/en/latest/#), you can try the following examples from within the REPL to generate a 10 x 10 random ASM once you've started the REPL from within the ```src``` directory (example below is for sage):
+### Usage with SageMath or Cython
+
+If you have [SageMath](https://www.sagemath.org) installed, or just [Cython](https://cython.readthedocs.io/en/latest/#), you can try the following examples from within the REPL to generate a 10 x 10 random ASM once you've started the REPL from within the ```src``` directory (example below is for sage):
 
  - ```sage: %runfile rasm_sage.pyx```
- - ```sage: a = rasm(10, initial=2^7, verbose=True)```
+ - ```sage: a = rasm(10, initial=int(2 ** 7), verbose=True)```
  - ```sage: pprint_asm(a)```
  - ```sage: pprint_asm(a, symbols="+-")```
  - for example:
