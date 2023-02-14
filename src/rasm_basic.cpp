@@ -347,6 +347,7 @@ int log2_int(int x) {
 
 void print_ht(int** matrix_ht, const int n_rows, const int n_cols) {
     int row, col;
+    // the max entry and its number of digits (formatting purposes)
     int max_entry = (int) (std::max(n_rows, n_cols));
     int num_digits = ((int) std::floor(std::log10(max_entry)))+1;
     for (row = 0; row < n_rows; row++) {
@@ -358,7 +359,7 @@ void print_ht(int** matrix_ht, const int n_rows, const int n_cols) {
 
 void print_csum(int** matrix_ht, const int n_rows, const int n_cols) {
     int row, col;
-    // the number of digits of the max entry
+    // the max entry and its number of digits (formatting purposes)
     int max_entry = (n_rows + n_cols - matrix_ht[n_rows-1][n_cols-1])/2;
     int num_digits = ((int) std::floor(std::log10(max_entry)))+1;
     for (row = 0; row < n_rows; row++) {
