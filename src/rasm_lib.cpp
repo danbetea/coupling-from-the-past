@@ -155,18 +155,26 @@ void evolve_ht(int **minimum_ht, int **maximum_ht,
     // go through the height matrix
     // look for local extremes 
     // start at 1 and end at order - 1 to stay off boundaries
-    // update where possible     
-    for (phase = 0; phase < 2; phase++) {
-        for (row = 1; row < n_rows - 1; ++row) {
-            for (col = 1; col < n_cols - 1; ++col) {
-                if ((row + col) % 2 == phase) {
-                    coin_flip = random_pm1(rn_gen); // uniform random +1 or -1
-                    if (is_extreme(minimum_ht, row, col))
-                        minimum_ht[row][col] = minimum_ht[row-1][col] + coin_flip;
-                    if (is_extreme(maximum_ht, row, col))
-                        maximum_ht[row][col] = maximum_ht[row-1][col] + coin_flip;
-                }
-            }
+    // update where possible
+
+    // phase 0 == (row + col) % 2
+    for(row=1; row < n_rows - 1; ++row) {
+        for(col=2-(row%2); col < n_cols - 1; col+=2) {
+            coin_flip = random_pm1(rn_gen); // uniform random +1 or -1
+            if(is_extreme(minimum_ht, row, col))
+                minimum_ht[row][col] = minimum_ht[row-1][col] + coin_flip;
+            if(is_extreme(maximum_ht, row, col))
+                maximum_ht[row][col] = maximum_ht[row-1][col] + coin_flip;
+        }
+    }
+    // phase 1 == (row + col) % 2
+    for(row=1; row < n_rows - 1; ++row) {
+        for(col=(row%2==0 ? 1 : 2); col < n_cols - 1; col+=2) {
+            coin_flip = random_pm1(rn_gen); // uniform random +1 or -1
+            if(is_extreme(minimum_ht, row, col))
+                minimum_ht[row][col] = minimum_ht[row-1][col] + coin_flip;
+            if(is_extreme(maximum_ht, row, col))
+                maximum_ht[row][col] = maximum_ht[row-1][col] + coin_flip;
         }
     }
 }
