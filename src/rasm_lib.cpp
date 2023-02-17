@@ -15,8 +15,8 @@ int last_rand;
 // holds the offset (which bit of last_rand) is being read
 int offset; // at most 32 for 32-bit code
 
-int **sample_asm(const int order, int initial = 128, 
-                 const bool verbose = false) {
+int **sample_asm(const int order, int initial=128, 
+                 const bool verbose=false) {
     // declare variables
     int count; 
     int seeds[256]; // seeds for coupling from the past
@@ -67,9 +67,6 @@ int **sample_asm(const int order, int initial = 128,
         std::uniform_int_distribution<> dist(-INT_MAX-1, INT_MAX);
         seeds[count] = dist(rn_gen);
     }
-
-    // initialize min and max height functions
-    initialize_ht(minimum_ht, maximum_ht, n_rows, n_cols);
 
     // run coupling from the past
     run_cftp(minimum_ht, maximum_ht, n_rows, n_cols, rn_gen, 
