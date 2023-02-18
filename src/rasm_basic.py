@@ -42,7 +42,7 @@ def rand_asm(n):
     except OSError:
         sys.stderr.write("Running program for the first time. Compiling C++ code...\n")
         # note: using call, as it ends for the completion of the compilation
-        cmd_compile = ['g++', '-Ofast', 'rasm_basic.cpp', '-o', 'rasm_basic']
+        cmd_compile = ['g++', '-O3', 'rasm_basic.cpp', '-o', 'rasm_basic']
         result_compile = subprocess.call(cmd_compile, stderr=open('/dev/null','w'))
         sys.stderr.write("End of compilation.\n")
         # return a bytes object

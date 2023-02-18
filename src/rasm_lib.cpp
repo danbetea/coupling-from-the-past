@@ -50,7 +50,7 @@ int **sample_asm(const int order, int initial=128, const bool verbose=false) {
 
     // create a random seed to be used just below
     std::random_device rd; // use to seed the rng
-    std::mt19937 rng0(rd()); // rng
+    RNG rng0(rd()); // rng
     std::uniform_int_distribution<> dist0(-INT_MAX-1, INT_MAX);
     random_seed = dist0(rng0);
 
@@ -58,7 +58,7 @@ int **sample_asm(const int order, int initial=128, const bool verbose=false) {
     // note: as soon as the main loop starts running, it will be reinitialized
     // this initialization is then only used to generate 256 random seeds used
     // in the coupling from the past construction down the line
-    std::mt19937 rn_gen(random_seed);
+    RNG rn_gen(random_seed);
     offset = 32; // technically not needed here
 
     // get 256 seeds, to be used by the random number generator in the
@@ -135,14 +135,14 @@ int volume_diff(int **minimum_ht, int **maximum_ht, const int n_rows,
     return diff;
 }
 
-// int random_pm1(std::mt19937& rn_gen){
+// int random_pm1(RNG& rn_gen){
 //     std::bernoulli_distribution dist(0.5);
 //     int coin_flip = dist(rn_gen) ? 1 : -1;
 //     // std::cout << "generated " << coin_flip << std::endl;
 //     return coin_flip;
 // }
 
-short random_pm1(std::mt19937& rn_gen) {
+short random_pm1(RNG& rn_gen) {
     // generates a 32 bit random uint and then reads off its bits one
     // by one for faster speed
     if(offset == 32) {
@@ -155,7 +155,7 @@ short random_pm1(std::mt19937& rn_gen) {
 }
 
 void evolve_ht(int **minimum_ht, int **maximum_ht,
-               const int n_rows, const int n_cols, std::mt19937& rn_gen) {
+               const int n_rows, const int n_cols, RNG& rn_gen) {
 
     short coin_flip;
 
@@ -181,7 +181,7 @@ void evolve_ht(int **minimum_ht, int **maximum_ht,
 }
 
 void run_cftp(int **minimum_ht, int **maximum_ht, const int n_rows,
-              const int n_cols, std::mt19937 &rn_gen, const int seeds[256],
+              const int n_cols, RNG &rn_gen, const int seeds[256],
               const int initial, const bool report, const bool timing) {
 
     int step;
@@ -208,7 +208,7 @@ void run_cftp(int **minimum_ht, int **maximum_ht, const int n_rows,
                 power_of_two = log2_int(step);
                 // declare and initialize random number generator
                 // with correct seeds so we use same randomness throughout
-                rn_gen = std::mt19937(seeds[power_of_two]);
+                rn_gen = RNG(seeds[power_of_two]);
                 offset = 32; // needed as we generate random bits
                              // from random 32-bit ints
 
