@@ -13,34 +13,46 @@ This repo generates (for now) uniformly random [alternating sign matrices](https
 
 The main files so far in the `src` directory are and do as follows:  
 
-- `rasm_basic.cpp` which generates a uniformly random alternating sign matrix (ASM); it has multiple ways of outputting the resulting ASM;
-- `rasm_basic.py` is a thin wrapper of the above written in Python, for people who don't want to compile C++ code themselves or want to interface with an 'easier' language;
-- `rasm_lib.cpp` is a library meant to be bound with Cython (e.g. there is no main function);
-- `rasm_sage.pyx` is a Cython binding doing the random sampling; it can be used from sage.
+- `rasm.cpp` and `rasm.h` generate a uniformly random alternating sign matrix (ASM), while parsing input from the command line;
+- `rasm_lib.cpp` and `rasm_lib.h` contain the main routines used in monotone coupling from the past; `rasm_lib.cpp` is also bound into Cython, see below;
+- `rasm_sage.pyx` is a Cython binding doing the random sampling; it can be used from within sage or Python;
+- `rasm_basic.cpp` is an *all-in-one* file containing a simplified (less optimized) implementation of the above; it is meant for pedagogical purposes and while very fast, it is less so than the above, for improved code readability;
+- `rasm_basic.py` is a thin wrapper of `rasm_basic.cpp` written in Python, for people who don't want to compile C++ code themselves or want to interface with an 'easier' language;
   
 For more on coupling from the past and alternating sign matrices, see the references below.
-  
+
 ## Usage
 
 ### Basic usage
 
 For basic usage:
 
-- compile with (default compiler is `g++`):
+- compile with (default compiler is `g++`, optimized with `-O3`):
 
   ```make```
 
 - use as:
 
-  > ```./rasm_basic -help```
-  >
-  > ```./rasm_basic 10 -asm```
-  >
-  > ```./rasm_basic 100 -asm_file```
-  >
-  > ```./rasm_basic 1000 -asm_file -initial 4194304``` (optimized for sampling a size 1000 ASM, takes about 8-10 hours)
-  >
-  > ```python3 rasm_basic.py 15```
+  ```./rasm -help```
+  
+  ```./rasm 10 -asm```
+  
+  ```./rasm 100 -asm_file```
+  
+  ```./rasm 1000 -asm_file -initial 4194304``` (optimized for sampling a size 1000 ASM, takes about 8-10 hours)
+
+### Learning curve usage
+
+If you want to learn a bit about the algorithm, please read the file `rasm_basic.cpp`. It's all-in-one, everything is in there:
+
+- compile with ```g++ -O3 rasm_basic.cpp -o rasm_basic```
+- use as above, i.e.
+  
+  ```./rasm_basic 100 -asm_file -initial 16384```
+
+- call from Python
+
+  ```python3 rasm_basic.py 15```
 
 ### Usage with SageMath or Cython
 
