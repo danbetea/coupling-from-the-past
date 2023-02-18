@@ -64,6 +64,6 @@ void evolve_ht(int** minimum_ht, int** maximum_ht, const int n_rows,
 /// @param report a bool for verbose progress report
 void run_cftp(int** minimum_ht, int** maximum_ht, const int n_rows, 
               const int n_cols, std::mt19937& rn_gen, const int seeds[256],
-              const int initial, const bool report);
+              const int initial, const bool report, const bool timing);
 
 #endif

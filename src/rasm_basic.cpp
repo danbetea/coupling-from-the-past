@@ -39,17 +39,17 @@ int main(int argc, char **argv) {
     */
 
 
-    if (argc < 2)
+    if(argc < 2)
         print_options();
 
-    if (!strcmp(argv[1],"-help"))
+    if(!strcmp(argv[1],"-help"))
         print_options();
 
     // read the order
     order = std::stoi(argv[1]); // sscanf(argv[1],"%d", &order); also works
 
     // TODO: make a check for a maximum order
-    if (order < 1 ) {
+    if(order < 1) {
         std::cerr << "Invalid order " << order << std::endl;
         exit(1);
     }
@@ -64,13 +64,13 @@ int main(int argc, char **argv) {
     // allocate memory
     int **minimum_ht = new int*[n_rows];
     int **maximum_ht = new int*[n_rows];
-    for(int i = 0; i < n_rows; ++i) {
+    for(int i=0; i<n_rows; ++i) {
         minimum_ht[i] = new int[n_cols];
         maximum_ht[i] = new int[n_cols];
     }
 
-    if (argc > 2)
-        for (count = 2; count < argc; ++count) {
+    if(argc > 2)
+        for(count=2; count<argc; ++count) {
             if (!strcmp(argv[count],"-asm"))
                 output = ASM;
             else if (!strcmp(argv[count],"-asm_file"))
@@ -93,8 +93,8 @@ int main(int argc, char **argv) {
                 use_random = false;
                 count++;
             }
-            else if (!strcmp(argv[count],"-initial")) {
-                if (count == argc - 1) {
+            else if(!strcmp(argv[count],"-initial")) {
+                if(count == argc - 1) {
                     std::cerr << "You must specify an initial number of steps.\n";
                     exit(1);
                 }
@@ -103,14 +103,14 @@ int main(int argc, char **argv) {
                     std::cerr << "Invalid value for initial; it must be between 1 and 2^29 = 536870912 \n";
                     exit(1);
                 }
-                count++;
-                if (1 << log2_int(initial) != initial) {
+                ++count;
+                if(1 << log2_int(initial) != initial) {
                     initial = (1 << log2_int(initial));
                     std::cerr << "Warning, initial is not a power of two. Increasing initial to " 
                               << initial << std::endl;
                 }
             }
-            else if (!strcmp(argv[count],"-help"))
+            else if(!strcmp(argv[count],"-help"))
                 print_options();
             else {
                 std::cerr << "Illegal command line argument " << argv[count] << std::endl;
@@ -122,19 +122,19 @@ int main(int argc, char **argv) {
     initialize_ht(minimum_ht, maximum_ht, n_rows, n_cols);
 
     // print min or max ht function if so desired
-    if (min_only) {
-        if (output == ASM)
+    if ](min_only) {
+        if(output == ASM)
             print_asm(minimum_ht, n_rows, n_cols);
-        else if (output == CSUM)
+        else if(output == CSUM)
             print_csum(minimum_ht, n_rows, n_cols);
         else
             print_ht(minimum_ht, n_rows, n_cols);
         exit(0);
     }
-    else if (max_only) {
-        if (output == ASM)
+    else if(max_only) {
+        if(output == ASM)
             print_asm(maximum_ht, n_rows, n_cols);
-        else if (output == CSUM)
+        else if(output == CSUM)
             print_csum(maximum_ht, n_rows, n_cols);
         else
             print_ht(maximum_ht, n_rows, n_cols);
@@ -183,8 +183,8 @@ int main(int argc, char **argv) {
     */
 
 
-    run_cftp(minimum_ht, maximum_ht, n_rows, n_cols, 
-             rn_gen, seeds, initial, report);
+    run_cftp(minimum_ht, maximum_ht, n_rows, n_cols,
+             rn_gen, seeds, initial, report, true);
 
 
     /*
@@ -194,11 +194,11 @@ int main(int argc, char **argv) {
     */
 
 
-    if (output == ASM) 
+    if(output == ASM) 
         print_asm(maximum_ht, n_rows, n_cols);
-    else if (output == ASM_F)
+    else if(output == ASM_F)
         print_asm_to_file(maximum_ht, n_rows, n_cols);
-    else if (output == CSUM)
+    else if(output == CSUM)
         print_csum(maximum_ht, n_rows, n_cols);
     else
         print_ht(maximum_ht, n_rows, n_cols);
@@ -206,7 +206,7 @@ int main(int argc, char **argv) {
     // std::cerr<<std::endl;
 
     // deallocate memory
-    for(int i = 0; i < n_rows; ++i) {
+    for(int i=0; i<n_rows; ++i) {
         delete [] minimum_ht[i];
         delete [] maximum_ht[i];
     }
