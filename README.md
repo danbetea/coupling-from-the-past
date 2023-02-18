@@ -26,9 +26,12 @@ For more on coupling from the past and alternating sign matrices, see the refere
 
 For basic usage:
 
-- compile with:
-```g++ -Ofast rasm_basic.cpp -o rasm_basic```
+- compile with (default compiler is `g++`):
+
+  ```make```
+
 - use as:
+
   > ```./rasm_basic -help```
   >
   > ```./rasm_basic 10 -asm```

@@ -7,108 +7,16 @@
 #include <cstring>
 #include <random>
 #include <cmath>
+#include "rasm_basic.h"
 
 #define HEIGHT 2
 #define ASM    3
 #define ASM_F  4  // ASM written to file
 #define CSUM   5  // Corner sum matrix
 
-/// @brief Prints the options available at the command line
-void print_options();
-
-/// @brief Computes the ceiling of log base 2 of x
-/// @param x an int
-/// @return = (int) ceiling log2(x), where log2 is log base 2
-/// e.g.: log2_int(17)=5, log2_int(16) = 4, log2_int(9)=4, log2_int(8)=3
-int log2_int(int x);
-
-/// @brief Prints the height function to stdout
-/// @param matrix_ht an int matrix, the height function
-/// @param n_rows number of rows of matrix_ht
-/// @param n_cols number of columns of matrix_ht
-void print_ht(int** matrix_ht, const int n_rows, const int n_cols);
-
-/// @brief Prints the corner sum matrix to stdout
-/// @param matrix_ht an int matrix, the height function
-/// @param n_rows number of rows of matrix_ht
-/// @param n_cols number of columns of matrix_ht
-void print_csum(int** matrix_ht, const int n_rows, const int n_cols);
-
-/// @brief Prints the ASM to stdout
-/// @param matrix_ht an int matrix, the height function
-/// @param n_rows number of rows of matrix_ht
-/// @param n_cols number of columns of matrix_ht
-void print_asm(int** matrix_ht, const int n_rows, const int n_cols);
-
-/// @brief Prints the ASM to two files 
-/// @param matrix_ht an int matrix, the height function
-/// @param n_rows number of rows of matrix_ht
-/// @param n_cols number of columns of matrix_ht
-void print_asm_to_file(int** matrix_ht, const int n_rows, const int n_cols);
-
-/// @brief Checks if site (row, col) in the matrix can be flipped
-/// @param matrix_ht an int matrix, the height function
-/// @param row the row being checked
-/// @param col the column being checked
-/// @return true if site can be flipped
-bool is_extreme(int** matrix_ht, const int row, const int col);
-
-/// @brief Initializes the minimum and maximum height functions
-/// @param minimum_ht the min height function
-/// @param maximum_ht the max height function
-/// @param n_rows number of rows of the height functions (same)
-/// @param n_cols number of columns of the height functions (same)
-void initialize_ht(int** minimum_ht, int** maximum_ht, 
-                   const int n_rows, const int n_cols);
-
-/// @brief Computes the volume difference between current min and max
-/// height functions
-/// @param minimum_ht the current min height function
-/// @param maximum_ht the current max height function
-/// @param n_rows number of rows of the height functions (same)
-/// @param n_cols number of columns of the height functions (same)
-/// @return the sum of the elements of the difference matrix
-int volume_diff(int** minimum_ht, int** maximum_ht, 
-                const int n_rows, const int n_cols);
-
-/// @brief Returns a uniformly random +1 or -1 
-/// @param rn_gen the random number generator
-/// @return +1 or -1 uniformly at random
-short random_pm1(std::mt19937& rn_gen);
-
-/// @brief Evolves the height function by random flips whenever possible
-/// @param minimum_ht the current min height function
-/// @param maximum_ht the current max height function
-/// @param n_rows number of rows of the height functions (same)
-/// @param n_cols number of columns of the height functions (same)
-/// @param rn_gen the random number generator
-void evolve_ht(int** minimum_ht, int** maximum_ht, const int n_rows, 
-               const int n_cols, std::mt19937& rn_gen);
-
-/// @brief Runs the coupling from the past main loop
-/// @param minimum_ht the min height function
-/// @param maximum_ht the max height function
-/// @param n_rows number of rows of the height functions (same)
-/// @param n_cols number of columns of the height functions (same)
-/// @param rn_gen the random number generator
-/// @param seeds the seeds array for reseeding at each critical point
-/// @param initial the number of initial steps to run the initial loop for
-/// @param report a bool for verbose progress report
-void run_cftp(int** minimum_ht, int** maximum_ht, const int n_rows, 
-              const int n_cols, std::mt19937& rn_gen, const int seeds[256],
-              const int initial, const bool report);
-
-// global variables needed for random number generation
-
-// holds the last random number generated
-int last_rand;
-// holds the offset (which bit of last_rand) is being read
-int offset; // at most 32 for 32-bit code
-
+extern int offset;
 
 int main(int argc, char **argv) {
-
-
     /*
     -----------------
     declare variables
@@ -131,17 +39,17 @@ int main(int argc, char **argv) {
     */
 
 
-    if (argc < 2)
+    if(argc < 2)
         print_options();
 
-    if (!strcmp(argv[1],"-help"))
+    if(!strcmp(argv[1],"-help"))
         print_options();
 
     // read the order
     order = std::stoi(argv[1]); // sscanf(argv[1],"%d", &order); also works
 
     // TODO: make a check for a maximum order
-    if (order < 1 ) {
+    if(order < 1) {
         std::cerr << "Invalid order " << order << std::endl;
         exit(1);
     }
@@ -154,15 +62,15 @@ int main(int argc, char **argv) {
 
     // declare the min and max height functions
     // allocate memory
-    int** minimum_ht = new int*[n_rows];
-    int** maximum_ht = new int*[n_rows];
-    for(int i = 0; i < n_rows; i++) {
+    int **minimum_ht = new int*[n_rows];
+    int **maximum_ht = new int*[n_rows];
+    for(int i=0; i<n_rows; ++i) {
         minimum_ht[i] = new int[n_cols];
         maximum_ht[i] = new int[n_cols];
     }
 
-    if (argc > 2)
-        for (count = 2; count < argc; count++) {
+    if(argc > 2)
+        for(count=2; count<argc; ++count) {
             if (!strcmp(argv[count],"-asm"))
                 output = ASM;
             else if (!strcmp(argv[count],"-asm_file"))
@@ -185,8 +93,8 @@ int main(int argc, char **argv) {
                 use_random = false;
                 count++;
             }
-            else if (!strcmp(argv[count],"-initial")) {
-                if (count == argc - 1) {
+            else if(!strcmp(argv[count],"-initial")) {
+                if(count == argc - 1) {
                     std::cerr << "You must specify an initial number of steps.\n";
                     exit(1);
                 }
@@ -195,14 +103,14 @@ int main(int argc, char **argv) {
                     std::cerr << "Invalid value for initial; it must be between 1 and 2^29 = 536870912 \n";
                     exit(1);
                 }
-                count++;
-                if (1 << log2_int(initial) != initial) {
+                ++count;
+                if(1 << log2_int(initial) != initial) {
                     initial = (1 << log2_int(initial));
                     std::cerr << "Warning, initial is not a power of two. Increasing initial to " 
                               << initial << std::endl;
                 }
             }
-            else if (!strcmp(argv[count],"-help"))
+            else if(!strcmp(argv[count],"-help"))
                 print_options();
             else {
                 std::cerr << "Illegal command line argument " << argv[count] << std::endl;
@@ -214,19 +122,19 @@ int main(int argc, char **argv) {
     initialize_ht(minimum_ht, maximum_ht, n_rows, n_cols);
 
     // print min or max ht function if so desired
-    if (min_only) {
-        if (output == ASM)
+    if ](min_only) {
+        if(output == ASM)
             print_asm(minimum_ht, n_rows, n_cols);
-        else if (output == CSUM)
+        else if(output == CSUM)
             print_csum(minimum_ht, n_rows, n_cols);
         else
             print_ht(minimum_ht, n_rows, n_cols);
         exit(0);
     }
-    else if (max_only) {
-        if (output == ASM)
+    else if(max_only) {
+        if(output == ASM)
             print_asm(maximum_ht, n_rows, n_cols);
-        else if (output == CSUM)
+        else if(output == CSUM)
             print_csum(maximum_ht, n_rows, n_cols);
         else
             print_ht(maximum_ht, n_rows, n_cols);
@@ -262,7 +170,7 @@ int main(int argc, char **argv) {
 
     // get 256 seeds, to be used by the random number generator in the
     // coupling from the past main loop
-    for (count = 0; count < 256; count++) {
+    for (count = 0; count < 256; ++count) {
         std::uniform_int_distribution<> dist(-INT_MAX-1, INT_MAX);
         seeds[count] = dist(rn_gen);
     }
@@ -275,8 +183,8 @@ int main(int argc, char **argv) {
     */
 
 
-    run_cftp(minimum_ht, maximum_ht, n_rows, n_cols, 
-             rn_gen, seeds, initial, report);
+    run_cftp(minimum_ht, maximum_ht, n_rows, n_cols,
+             rn_gen, seeds, initial, report, true);
 
 
     /*
@@ -286,11 +194,11 @@ int main(int argc, char **argv) {
     */
 
 
-    if (output == ASM) 
+    if(output == ASM) 
         print_asm(maximum_ht, n_rows, n_cols);
-    else if (output == ASM_F)
+    else if(output == ASM_F)
         print_asm_to_file(maximum_ht, n_rows, n_cols);
-    else if (output == CSUM)
+    else if(output == CSUM)
         print_csum(maximum_ht, n_rows, n_cols);
     else
         print_ht(maximum_ht, n_rows, n_cols);
@@ -298,7 +206,7 @@ int main(int argc, char **argv) {
     // std::cerr<<std::endl;
 
     // deallocate memory
-    for(int i = 0; i < n_rows; i++) {
+    for(int i=0; i<n_rows; ++i) {
         delete [] minimum_ht[i];
         delete [] maximum_ht[i];
     }
@@ -333,55 +241,43 @@ void print_options() {
     std::exit(1);
 }
 
-int log2_int(int x) {
-    // e.g.: log2_int(17)=5, log2_int(16) = 4, log2_int(9)=4, log2_int(8)=3
-    int ans = 0;
-    if (x)
-        x --;
-    while (x > 0) {
-        x >>= 1;
-        ans++;
-    }
-    return ans;
-}
-
-void print_ht(int** matrix_ht, const int n_rows, const int n_cols) {
+void print_ht(int **matrix_ht, const int n_rows, const int n_cols) {
     int row, col;
     // the max entry and its number of digits (formatting purposes)
     int max_entry = (int) (std::max(n_rows, n_cols));
     int num_digits = ((int) std::floor(std::log10(max_entry)))+1;
-    for (row = 0; row < n_rows; row++) {
-        for (col = 0; col < n_cols; col++)
+    for (row = 0; row < n_rows; ++row) {
+        for (col = 0; col < n_cols; ++col)
             std::printf("%*d ", num_digits, matrix_ht[row][col]);
         std::printf("\n");
     }
 }
 
-void print_csum(int** matrix_ht, const int n_rows, const int n_cols) {
+void print_csum(int **matrix_ht, const int n_rows, const int n_cols) {
     int row, col;
     // the max entry and its number of digits (formatting purposes)
-    int max_entry = (n_rows + n_cols - matrix_ht[n_rows-1][n_cols-1])/2;
-    int num_digits = ((int) std::floor(std::log10(max_entry)))+1;
-    for (row = 0; row < n_rows; row++) {
-        for (col = 0; col < n_cols; col++)
+    int max_entry = (n_rows + n_cols - matrix_ht[n_rows-1][n_cols-1]) / 2;
+    int num_digits = ((int) std::floor(std::log10(max_entry))) + 1;
+    for (row = 0; row < n_rows; ++row) {
+        for (col = 0; col < n_cols; ++col)
             std::printf("%*d", num_digits+1, (row + col + 2 - matrix_ht[row][col])/2);
         std::printf("\n");
     }
 }
 
-void print_asm(int** matrix_ht, const int n_rows, const int n_cols) {
+void print_asm(int **matrix_ht, const int n_rows, const int n_cols) {
     int row, col;
     // start at 1, because we're reading the ASM from the 
     // + 1 bigger size height function
-    for (row = 1; row < n_rows; row++) {
-        for (col = 1; col < n_cols; col++)
+    for (row = 1; row < n_rows; ++row) {
+        for (col = 1; col < n_cols; ++col)
             std::printf("%2d ",(matrix_ht[row-1][col] + matrix_ht[row][col-1] 
                         - matrix_ht[row][col] - matrix_ht[row-1][col-1]) / 2);
         std::printf("\n");
     }
 }
 
-void print_asm_to_file(int** matrix_ht, const int n_rows, const int n_cols) {
+void print_asm_to_file(int **matrix_ht, const int n_rows, const int n_cols) {
     int row, col;
     FILE *fptr1;
     FILE *fptr2;
@@ -393,8 +289,8 @@ void print_asm_to_file(int** matrix_ht, const int n_rows, const int n_cols) {
         std::exit(1);
     }
 
-    for (row = 1; row < n_rows; row++) {
-        for (col = 1; col < n_cols; col++){
+    for (row = 1; row < n_rows; ++row) {
+        for (col = 1; col < n_cols; ++col){
             int entry = (int) (matrix_ht[row-1][col] + matrix_ht[row][col-1] 
                        - matrix_ht[row][col] - matrix_ht[row-1][col-1]) / 2;
             if (entry == 0) {
@@ -417,128 +313,3 @@ void print_asm_to_file(int** matrix_ht, const int n_rows, const int n_cols) {
     std::fclose(fptr2);
 }
 
-bool is_extreme(int** matrix_ht, const int row, const int col) {
-    return (matrix_ht[row-1][col] == matrix_ht[row][col+1] &&
-            matrix_ht[row][col+1] == matrix_ht[row+1][col] &&
-            matrix_ht[row+1][col] == matrix_ht[row][col-1]);
-}
-
-void initialize_ht(int** minimum_ht, int** maximum_ht, const int n_rows, 
-                   const int n_cols) {
-    int row, col;
-    for (row = 0; row < n_rows; row++)
-        for (col = 0; col < n_cols; col++)
-            minimum_ht[row][col] = std::abs((int) (row - col)) + 1;
-    for (row = 0; row < n_rows; row++)
-        for (col = 0; col < n_cols; col++)
-            // TODO: change to allow for rectangular matrices
-            // for now this assumes n_rows = n_cols
-            maximum_ht[row][col] = n_rows - std::abs((int) (n_rows - col - row - 1));
-}
-
-int volume_diff(int** minimum_ht, int** maximum_ht, const int n_rows, 
-                const int n_cols) {
-    int diff = 0;
-    int row, col;
-    for (row = 0; row < n_rows; row++)
-        for (col = 0; col < n_cols; col++)
-        diff += (maximum_ht[row][col] - minimum_ht[row][col]);
-    return diff;
-}
-
-// int random_pm1(std::mt19937& rn_gen){
-//     std::bernoulli_distribution dist(0.5);
-//     int coin_flip = dist(rn_gen) ? 1 : -1;
-//     // std::cout << "generated " << coin_flip << std::endl; 
-//     return coin_flip;
-// }
-
-short random_pm1(std::mt19937& rn_gen) {
-    // generates a 32 bit random uint and then reads off its bits one 
-    // by one for faster speed
-    if(offset == 32) {
-        std::uniform_int_distribution<unsigned int> dist(0, UINT_MAX);
-        last_rand = dist(rn_gen);
-        offset=0;
-    }
-    // read off the individual bits and increase the offset for next read
-    return( (last_rand&(1<<offset++)) ? 1 : -1 );
-}
-
-void evolve_ht(int** minimum_ht, int** maximum_ht, 
-               const int n_rows, const int n_cols, std::mt19937& rn_gen) {
-    int row, col, phase;
-    short coin_flip;
-
-    // go through the height matrix
-    // look for local extremes 
-    // start at 1 and end at order - 1 to stay off boundaries
-    // update where possible     
-    for (phase = 0; phase < 2; phase++)
-        for (row = 1; row < n_rows - 1; row++)
-            for (col = 1; col < n_cols - 1; col++)
-                if ((row + col) % 2 == phase) {
-                    coin_flip = random_pm1(rn_gen); // uniform random +1 or -1
-                    if (is_extreme(minimum_ht, row, col))
-                        minimum_ht[row][col] = minimum_ht[row-1][col] + coin_flip;
-                    if (is_extreme(maximum_ht, row, col))
-                        maximum_ht[row][col] = maximum_ht[row-1][col] + coin_flip;
-                }
-}
-
-void run_cftp(int** minimum_ht, int** maximum_ht, const int n_rows, 
-              const int n_cols, std::mt19937& rn_gen, const int seeds[256],
-              const int initial, const bool report) {
-    
-    int step;
-    std::time_t start, end; // for elapsed time
-
-    start = std::clock(); // start the clock
-
-    // we now run the coupling from the past main loop
-    // starting from time = -initial all the way to time 0
-    // and restarting with doubling time if it hasn't converged
-    int time_steps = initial;
-    while (volume_diff(minimum_ht, maximum_ht, n_rows, n_cols)) {
-        step = time_steps;
-
-        /* reset min and max heights */
-        initialize_ht(minimum_ht, maximum_ht, n_rows, n_cols);
-
-        int power_of_two = -2;
-
-        // the main coupling from the past loop, runs for a power_of_two steps
-        while (step > 0) {
-            if (log2_int(step) != power_of_two) {
-                power_of_two = log2_int(step);
-                // declare and initialize random number generator 
-                // with correct seeds so we use same randomness throughout
-                rn_gen = std::mt19937(seeds[power_of_two]);
-                offset = 32; // needed as we generate random bits 
-                             // from random 32-bit ints
-
-                if (report)
-                    std::cerr << "Using max number of steps " << time_steps 
-                        << " and difference in volume at time " 
-                        << step << " is " 
-                        << volume_diff(maximum_ht, minimum_ht, n_rows, n_cols) 
-                        << std::endl;
-            }
-            evolve_ht(minimum_ht, maximum_ht, n_rows, n_cols, rn_gen);
-            step--;
-        }
-
-        if (report)
-            std::cerr << "Volume of difference at time 0 is " 
-                      << volume_diff(maximum_ht, minimum_ht, n_rows, n_cols)
-                      << std::endl;
-
-        time_steps *= 2;
-    }
-    std::cerr << "Random ASM of order " << n_rows-1 << " x " << n_cols-1
-                << " generated after " 
-                << time_steps / 2 << " steps." << std::endl;
-    end = std::clock();
-    double total_time = (double) (end - start)/CLOCKS_PER_SEC;
-    std::fprintf(stderr, "Elapsed time: %.4f seconds.\n", total_time);
-}
