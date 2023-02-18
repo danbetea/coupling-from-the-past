@@ -7,7 +7,7 @@
 #include <cstring>
 #include <random>
 #include <cmath>
-#include "rasm_basic.h"
+#include "rasm.h"
 
 #define HEIGHT 2
 #define ASM    3
@@ -122,7 +122,7 @@ int main(int argc, char **argv) {
     initialize_ht(minimum_ht, maximum_ht, n_rows, n_cols);
 
     // print min or max ht function if so desired
-    if ](min_only) {
+    if (min_only) {
         if(output == ASM)
             print_asm(minimum_ht, n_rows, n_cols);
         else if(output == CSUM)

@@ -1,5 +1,5 @@
-#ifndef RASM_BASIC
-#define RASM_BASIC
+#ifndef RASM
+#define RASM
 
 #include "rasm_lib.h"
 
