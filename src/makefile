@@ -1,6 +1,8 @@
 CC=g++
 CFLAGS= -O3
+LDFLAGS+= -fopenmp
 objects = rasm.o rasm_lib.o
+objects_omp = rasm_omp.o rasm_lib_omp.o
 
 rasm: $(objects)
 	$(CC) $(CFLAGS) -o rasm $(objects)

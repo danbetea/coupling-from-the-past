@@ -15,6 +15,7 @@ int last_rand;
 // holds the offset (which bit of last_rand) is being read
 int offset; // at most 32 for 32-bit code
 
+// Samples the random alternating sign matrix (ASM)
 int **sample_asm(const int order, int initial=128, const bool verbose=false) {
     // declare variables
     int count;
@@ -81,8 +82,9 @@ int **sample_asm(const int order, int initial=128, const bool verbose=false) {
     return maximum_ht;
 }
 
+// Computes (int) ceil(log2(x))
+// e.g.: log2_int(17)=5, log2_int(16) = 4, log2_int(9)=4, log2_int(8)=3
 int log2_int(int x) {
-    // e.g.: log2_int(17)=5, log2_int(16) = 4, log2_int(9)=4, log2_int(8)=3
     int ans = 0;
     if (x)
         --x;
@@ -93,12 +95,14 @@ int log2_int(int x) {
     return ans;
 }
 
+// Checks whether (row, col) position in matrix_ht can be flipped 
 inline bool is_extreme(int **matrix_ht, const int row, const int col) {
     return (matrix_ht[row-1][col] == matrix_ht[row][col+1] &&
             matrix_ht[row][col+1] == matrix_ht[row+1][col] &&
             matrix_ht[row+1][col] == matrix_ht[row][col-1]);
 }
 
+// Initializes max and min height functions
 void initialize_ht(int **minimum_ht, int **maximum_ht, const int n_rows,
                    const int n_cols) {
     int row, col;
@@ -122,9 +126,10 @@ void initialize_ht(int **minimum_ht, int **maximum_ht, const int n_rows,
     }
 }
 
-// This function could be eleminated by having this as a variable
-//   and modifying it in evolve_ht().
-// However, this is not called very often, so it doesn't contribute much to the timings.
+// Computes the difference between max and min height functions.
+// This function could be eliminated by having this as a variable
+// and modifying it in evolve_ht(). However, this is not
+// called very often, so it doesn't contribute much to the timings.
 int volume_diff(int **minimum_ht, int **maximum_ht, const int n_rows,
                 const int n_cols) {
     int diff = 0;
@@ -142,9 +147,9 @@ int volume_diff(int **minimum_ht, int **maximum_ht, const int n_rows,
 //     return coin_flip;
 // }
 
+// Generates a 32 bit random uint and then reads off its bits one
+// by one for faster speed
 short random_pm1(RNG& rn_gen) {
-    // generates a 32 bit random uint and then reads off its bits one
-    // by one for faster speed
     if(offset == 32) {
         std::uniform_int_distribution<unsigned int> dist(0, UINT_MAX);
         last_rand = dist(rn_gen);
@@ -154,6 +159,8 @@ short random_pm1(RNG& rn_gen) {
     return (last_rand & (1 << offset++)) ? 1 : -1;
 }
 
+// Evolves the min and max height functions according to the
+// monotone coupling from the past dynamics
 void evolve_ht(int **minimum_ht, int **maximum_ht,
                const int n_rows, const int n_cols, RNG& rn_gen) {
 
@@ -180,6 +187,7 @@ void evolve_ht(int **minimum_ht, int **maximum_ht,
     }
 }
 
+// Runs the main loop for monotone coupling from the past dynamics
 void run_cftp(int **minimum_ht, int **maximum_ht, const int n_rows,
               const int n_cols, RNG &rn_gen, const int seeds[256],
               const int initial, const bool report, const bool timing) {
