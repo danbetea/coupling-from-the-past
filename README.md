@@ -148,7 +148,7 @@ Below are a few references, at various levels of technicality, for the descripti
 
 - Häggström, O. *Finite Markov chains and algorithmic applications*, Cambridge University Press, 2002
 - Levin, D., Peres, Y., with a contribution by Wilmer, E., *Markov chains and mixing times*, second edition, American Mathematical Society, [link to pdf](https://pages.uoregon.edu/dlevin/MARKOV/markovmixing.pdf)
-- Propp, J., *The many faces of alternating sign matriecs* [arXiv link](https://arxiv.org/abs/math/0208125)
+- Propp, J., *The many faces of alternating sign matriecs*, [arXiv link](https://arxiv.org/abs/math/0208125)
 - [Wikipedia page for alternating sign matrices](https://en.wikipedia.org/wiki/Alternating_sign_matrix)
 - [Wikipedia page for coupling from the past](https://en.wikipedia.org/wiki/Coupling_from_the_past)
 - Wilson, D., *Perfectly random sampling with Markov chains*, [author's webpage](http://www.dbwilson.com/exact/)
