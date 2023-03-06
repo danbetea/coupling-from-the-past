@@ -8,11 +8,6 @@
 #include <random>
 #include <cmath>
 
-#define HEIGHT 2
-#define ASM    3
-#define ASM_F  4  // ASM written to file
-#define CSUM   5  // Corner sum matrix
-
 // random number generator
 typedef std::mt19937 RNG;
 
@@ -120,8 +115,10 @@ int main(int argc, char **argv) {
     */
 
     int order, n_rows, n_cols; // order/size of ASM, num rows and num cols
-    int count; 
-    int output = HEIGHT; // default option for printing to stdout
+    int count;
+    // const options for command line
+    enum cmd_options {ASM = 2, HEIGHT = 3, CSUM = 4, ASM_F = 5};    
+    int output = ASM; // default option for printing to stdout
     // various options for command line
     bool min_only = false, max_only = false, use_random = true, report = false;
     int seeds[256]; // seeds for coupling from the past
@@ -173,6 +170,8 @@ int main(int argc, char **argv) {
                 output = ASM_F;
             else if (!strcmp(argv[count],"-csum"))
                 output = CSUM;
+            else if (!strcmp(argv[count],"-height"))
+                output = HEIGHT;
             else if (!strcmp(argv[count],"-report"))
                 report = true;
             else if (!strcmp(argv[count],"-min_only"))
@@ -323,6 +322,7 @@ void print_options() {
     std::cout << "   -asm              output the alternating sign matrix\n";
     std::cout << "   -asm_file         output the alternating sign matrix to files asm.txt and asm_pretty.txt\n";
     std::cout << "   -csum             output the corresponding corner sum matrix\n";
+    std::cout << "   -height           output the corresponding height function\n";
     std::cout << "   -seed <value>     use a specific random seed\n";
     std::cout << "   -initial <value>  use a specific initial value\n";
     std::cout << "   -report           give a progress report\n";
