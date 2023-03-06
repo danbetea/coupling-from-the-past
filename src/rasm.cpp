@@ -219,7 +219,7 @@ void print_options() {
     std::cout << std::endl;
     std::cout << "Usage for this program (don't type the '$'): \n";
     std::cout << std::endl;
-    std::cout << "   $ ./rasm_basic order [options]\n";
+    std::cout << "   $ ./rasm order [options]\n";
     std::cout << std::endl;
     std::cout << "where order is an integer > 0 and [options] are:\n";
     std::cout << std::endl;
@@ -235,7 +235,7 @@ void print_options() {
     std::cout << "   -help             give a listing of command line arguments\n";
     std::cout << std::endl;
     std::cout << "Example: \n\n";
-    std::cout << "   $ ./rasm_basic 301 -asm_file -initial 262144\n\n";
+    std::cout << "   $ ./rasm 301 -asm_file -initial 262144\n\n";
     std::cout << "is optimized for fast generation of 300x300 ASMs dumped to a file. \n\n";
 
     std::exit(1);
